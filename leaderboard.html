@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Kudumbasree Maze Leaderboard</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        html,
+        body {
+            min-height: 100%;
+        }
+
+
+        body {
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #241343 0%,
+                    #130923 45%,
+                    #09050f 100%
+                );
+
+            color: white;
+
+            padding:
+                50px 20px;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: flex-start;
+        }
+
+
+        .page {
+            width: 100%;
+
+            max-width: 850px;
+
+            text-align: center;
+        }
+
+
+        /* =============================================
+           HEADER
+        ============================================= */
+
+        .eyebrow {
+            color: #ff8ed8;
+
+            font-size: 0.75rem;
+
+            font-weight: bold;
+
+            letter-spacing: 0.35em;
+
+            margin-bottom: 14px;
+        }
+
+
+        h1 {
+            font-size:
+                clamp(2.2rem, 7vw, 4.5rem);
+
+            line-height: 0.95;
+
+            letter-spacing: 0.02em;
+        }
+
+
+        .subtitle {
+            margin-top: 18px;
+
+            color:
+                rgba(255,255,255,0.5);
+
+            font-size: 0.95rem;
+        }
+
+
+        /* =============================================
+           LEADERBOARD CARD
+        ============================================= */
+
+        .leaderboard-card {
+            width: 100%;
+
+            margin:
+                45px auto 0;
+
+            padding: 30px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.12);
+
+            border-radius: 26px;
+
+            background:
+                rgba(255,255,255,0.055);
+
+            backdrop-filter:
+                blur(12px);
+
+            box-shadow:
+                0 25px 70px
+                rgba(0,0,0,0.25);
+        }
+
+
+        .status {
+            padding: 30px;
+
+            color:
+                rgba(255,255,255,0.5);
+
+            font-size: 0.9rem;
+        }
+
+
+        .table-wrapper {
+            display: none;
+
+            width: 100%;
+
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            text-align: left;
+        }
+
+
+        th {
+            padding:
+                0 15px 14px;
+
+            color:
+                rgba(255,255,255,0.35);
+
+            font-size: 0.65rem;
+
+            letter-spacing: 0.15em;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.1);
+        }
+
+
+        td {
+            padding:
+                16px 15px;
+
+            color:
+                rgba(255,255,255,0.72);
+
+            font-size: 0.9rem;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.06);
+        }
+
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+
+        tbody tr {
+            transition:
+                background 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        tbody tr:hover {
+            background:
+                rgba(255,142,216,0.07);
+        }
+
+
+        .rank {
+            width: 65px;
+
+            color: #ff8ed8;
+
+            font-weight: bold;
+        }
+
+
+        .player {
+            color: white;
+
+            font-weight: bold;
+        }
+
+
+        .score {
+            color: #ff8ed8;
+
+            font-weight: bold;
+        }
+
+
+        /* =============================================
+           TOP THREE
+        ============================================= */
+
+        tbody tr:nth-child(1) {
+            background:
+                rgba(255,215,0,0.06);
+        }
+
+
+        tbody tr:nth-child(2) {
+            background:
+                rgba(220,220,220,0.035);
+        }
+
+
+        tbody tr:nth-child(3) {
+            background:
+                rgba(205,127,50,0.04);
+        }
+
+
+        /* =============================================
+           FOOTER
+        ============================================= */
+
+        .formula {
+            margin-top: 22px;
+
+            color:
+                rgba(255,255,255,0.3);
+
+            font-size: 0.7rem;
+
+            letter-spacing: 0.08em;
+        }
+
+
+        .refresh-button {
+            margin-top: 28px;
+
+            padding:
+                11px 20px;
+
+            border:
+                1px solid
+                rgba(255,255,255,0.15);
+
+            border-radius: 999px;
+
+            background:
+                rgba(255,255,255,0.05);
+
+            color:
+                rgba(255,255,255,0.7);
+
+            font-size: 0.7rem;
+
+            font-weight: bold;
+
+            letter-spacing: 0.15em;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease,
+                transform 0.2s ease;
+        }
+
+
+        .refresh-button:hover {
+            background:
+                rgba(255,142,216,0.12);
+
+            color: #ff8ed8;
+
+            transform:
+                translateY(-2px);
+        }
+
+
+        /* =============================================
+           MOBILE
+        ============================================= */
+
+        @media (max-width: 600px) {
+
+            body {
+                padding:
+                    35px 12px;
+            }
+
+
+            .leaderboard-card {
+                padding:
+                    22px 8px;
+
+                margin-top: 35px;
+            }
+
+
+            th,
+            td {
+                padding:
+                    13px 7px;
+
+                font-size: 0.72rem;
+            }
+
+
+            th {
+                font-size: 0.52rem;
+
+                letter-spacing: 0.08em;
+            }
+
+
+            .rank {
+                width: 40px;
+            }
+
+
+            .subtitle {
+                font-size: 0.85rem;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <main class="page">
+
+
+        <p class="eyebrow">
+            KUDUMBASREE GAME NIGHT
+        </p>
+
+
+        <h1>
+            🏆 MAZE<br>
+            LEADERBOARD
+        </h1>
+
+
+        <p class="subtitle">
+            Speed is important. Walls are expensive.
+        </p>
+
+
+        <section class="leaderboard-card">
+
+
+            <div
+                class="status"
+                id="leaderboardStatus"
+            >
+                Loading the chaos...
+            </div>
+
+
+            <div
+                class="table-wrapper"
+                id="leaderboardTableWrapper"
+            >
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>#</th>
+
+                            <th>PLAYER</th>
+
+                            <th>TIME</th>
+
+                            <th>BUMPS</th>
+
+                            <th>SCORE</th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="leaderboardBody">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+
+            <p class="formula">
+                SCORE = TIME + (WALL BUMPS × 2)
+            </p>
+
+
+            <button
+                class="refresh-button"
+                onclick="loadLeaderboard()"
+            >
+                ↻ REFRESH
+            </button>
+
+
+        </section>
+
+
+    </main>
+
+
+
+    <script>
+
+        /* =============================================
+           GOOGLE APPS SCRIPT
+        ============================================= */
+
+        const SCRIPT_URL =
+            "https://script.google.com/macros/s/AKfycbwqNsNU9OViM4z_-x13CDyBmfe2sFG-h1mcbJFJU_U2Xg8d6jiMg9h0Es4lIohlmRxsfQ/exec";
+
+
+        /* =============================================
+           LOAD LEADERBOARD
+        ============================================= */
+
+        async function loadLeaderboard() {
+
+            const status =
+                document.getElementById(
+                    "leaderboardStatus"
+                );
+
+            const wrapper =
+                document.getElementById(
+                    "leaderboardTableWrapper"
+                );
+
+            const body =
+                document.getElementById(
+                    "leaderboardBody"
+                );
+
+
+            status.style.display =
+                "block";
+
+            status.textContent =
+                "Loading the chaos...";
+
+            wrapper.style.display =
+                "none";
+
+            body.innerHTML =
+                "";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        SCRIPT_URL +
+                        "?action=getLeaderboard"
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Could not load leaderboard"
+                    );
+
+                }
+
+
+                const result =
+                    await response.json();
+
+
+                if (!result.success) {
+
+                    throw new Error(
+                        result.error ||
+                        "Could not load leaderboard"
+                    );
+
+                }
+
+
+                const leaderboard =
+                    result.leaderboard || [];
+
+
+                if (
+                    leaderboard.length === 0
+                ) {
+
+                    status.textContent =
+                        "Nobody is on the board yet 👀";
+
+                    return;
+
+                }
+
+
+                leaderboard.forEach(
+                    function(player, index) {
+
+                        const row =
+                            document.createElement(
+                                "tr"
+                            );
+
+
+                        /* -------------------------
+                           RANK
+                        ------------------------- */
+
+                        let rank =
+                            index + 1;
+
+
+                        if (index === 0) {
+
+                            rank = "🥇";
+
+                        }
+
+                        else if (index === 1) {
+
+                            rank = "🥈";
+
+                        }
+
+                        else if (index === 2) {
+
+                            rank = "🥉";
+
+                        }
+
+
+                        const rankCell =
+                            document.createElement(
+                                "td"
+                            );
+
+                        rankCell.className =
+                            "rank";
+
+                        rankCell.textContent =
+                            rank;
+
+
+                        /* -------------------------
+                           PLAYER
+                        ------------------------- */
+
+                        const playerCell =
+                            document.createElement(
+                                "td"
+                            );
+
+                        playerCell.className =
+                            "player";
+
+                        playerCell.textContent =
+                            player.name;
+
+
+                        /* -------------------------
+                           TIME
+                        ------------------------- */
+
+                        const timeCell =
+                            document.createElement(
+                                "td"
+                            );
+
+                        timeCell.textContent =
+                            Number(
+                                player.time
+                            ).toFixed(2) +
+                            "s";
+
+
+                        /* -------------------------
+                           BUMPS
+                        ------------------------- */
+
+                        const bumpsCell =
+                            document.createElement(
+                                "td"
+                            );
+
+                        bumpsCell.textContent =
+                            player.bumps;
+
+
+                        /* -------------------------
+                           SCORE
+                        ------------------------- */
+
+                        const scoreCell =
+                            document.createElement(
+                                "td"
+                            );
+
+                        scoreCell.className =
+                            "score";
+
+                        scoreCell.textContent =
+                            Number(
+                                player.score
+                            ).toFixed(2);
+
+
+                        row.appendChild(
+                            rankCell
+                        );
+
+                        row.appendChild(
+                            playerCell
+                        );
+
+                        row.appendChild(
+                            timeCell
+                        );
+
+                        row.appendChild(
+                            bumpsCell
+                        );
+
+                        row.appendChild(
+                            scoreCell
+                        );
+
+
+                        body.appendChild(
+                            row
+                        );
+
+                    }
+                );
+
+
+                status.style.display =
+                    "none";
+
+                wrapper.style.display =
+                    "block";
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Leaderboard failed:",
+                    error
+                );
+
+
+                status.textContent =
+                    "Couldn't load the leaderboard 😭";
+
+            }
+
+        }
+
+
+        /* =============================================
+           LOAD WHEN PAGE OPENS
+        ============================================= */
+
+        loadLeaderboard();
+
+    </script>
+
+</body>
+
+</html>

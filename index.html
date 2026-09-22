@@ -1428,6 +1428,37 @@ height: calc(100% / var(--maze-rows));
     margin-top: 12px;
 }
 
+   .back-button {
+    display: block;
+
+    margin: 18px auto 0;
+
+    padding: 8px 14px;
+
+    border: none;
+
+    background: transparent;
+
+    color: rgba(255,255,255,0.5);
+
+    font-size: 0.8rem;
+    font-weight: bold;
+
+    letter-spacing: 0.15em;
+
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+.back-button:hover {
+    color: #ff8ed8;
+
+    transform: translateX(-4px);
+}
+
 
 /* =========================================================
    SCREEN 5 — FINAL
@@ -2287,23 +2318,33 @@ height: calc(100% / var(--maze-rows));
 
 
         <p
-            class="time-error"
-            id="timeError"
-        >
-            Pick at least one option 
-        </p>
+    class="time-error"
+    id="timeError"
+>
+    Pick at least one option 👀
+</p>
 
 
-        <button
-            class="main-button time-continue"
-            onclick="continueFromTimes()"
-        >
-            CONTINUE
+<button
+    type="button"
+    class="back-button"
+    onclick="backToDates()"
+>
+    ← BACK
+</button>
 
-            <span class="arrow">
-                →
-            </span>
-        </button>
+
+<button
+    type="button"
+    class="main-button time-continue"
+    onclick="continueFromTimes()"
+>
+    CONTINUE
+
+    <span class="arrow">
+        →
+    </span>
+</button>
 
     </div>
 
@@ -2517,11 +2558,11 @@ height: calc(100% / var(--maze-rows));
         </p>
 
         <button
-            class="main-button"
-            onclick="tryDatesAgain()"
-        >
-            FINE, LET ME TRY AGAIN
-        </button>
+    class="main-button"
+    onclick="tryAgain()"
+>
+    FINE, LET ME TRY AGAIN
+</button>
 
     </div>
 
@@ -3241,30 +3282,25 @@ function toggleTime(card) {
 
 
     /*
-       NONE clears everything else
+       NONE → immediately go to Boo Loser
     */
 
     if (time === "none") {
 
         allCards.forEach(function(item) {
-
             item.classList.remove("selected");
-
         });
-
 
         selectedTimes = ["none"];
 
-
         customContainer.classList.remove("show");
-
         customInput.value = "";
-
 
         card.classList.add("selected");
 
-        return;
+        showLoserPage("time");
 
+        return;
     }
 
 
@@ -3327,7 +3363,44 @@ function toggleTime(card) {
 
 }
 
-   function continueFromTimes() {
+
+/* =========================================================
+   BACK TO DATES
+========================================================= */
+
+function backToDates() {
+
+    const timeScreen =
+        document.getElementById("timeScreen");
+
+    const dateScreen =
+        document.getElementById("dateScreen");
+
+    const timeError =
+        document.getElementById("timeError");
+
+
+    timeError.classList.remove("show");
+
+    timeScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        dateScreen.classList.remove("hidden");
+
+        dateScreen.scrollTop = 0;
+
+    }, 300);
+
+}
+
+
+/* =========================================================
+   CONTINUE FROM TIMES
+========================================================= */
+
+function continueFromTimes() {
 
     const error =
         document.getElementById("timeError");
@@ -3344,6 +3417,21 @@ function toggleTime(card) {
             "Pick at least one option 👀";
 
         error.classList.add("show");
+
+        return;
+
+    }
+
+
+    /*
+       Safety check:
+       if None is somehow selected,
+       go to Boo Loser.
+    */
+
+    if (selectedTimes.includes("none")) {
+
+        showLoserPage("time");
 
         return;
 
@@ -3403,7 +3491,12 @@ function toggleTime(card) {
 
 }
 
-   function showFinalPage() {
+
+/* =========================================================
+   FINAL PAGE
+========================================================= */
+
+function showFinalPage() {
 
     const timeScreen =
         document.getElementById("timeScreen");
@@ -3433,6 +3526,7 @@ function toggleTime(card) {
     }, 300);
 
 }
+
 
    function submitSuggestion() {
 
@@ -3475,29 +3569,62 @@ function toggleTime(card) {
    BOO LOSER
 ========================================================= */
 
-function showLoserPage() {
+/* =========================================================
+   BOO LOSER
+========================================================= */
+
+function showLoserPage(fromScreen = "date") {
 
     const dateScreen =
         document.getElementById("dateScreen");
+
+    const timeScreen =
+        document.getElementById("timeScreen");
 
     const loserScreen =
         document.getElementById("loserScreen");
 
 
-    dateScreen.classList.add("hidden");
+    /*
+       Remember which page they came from
+    */
+
+    loserScreen.dataset.from = fromScreen;
+
+
+    /*
+       Hide the correct current screen
+    */
+
+    if (fromScreen === "time") {
+
+        timeScreen.classList.add("hidden");
+
+    }
+
+    else {
+
+        dateScreen.classList.add("hidden");
+
+    }
 
 
     setTimeout(function() {
 
         loserScreen.classList.remove("hidden");
 
+        loserScreen.scrollTop = 0;
+
     }, 300);
 
 }
 
 
+/* =========================================================
+   TRY AGAIN FROM BOO LOSER
+========================================================= */
 
-function tryDatesAgain() {
+function tryAgain() {
 
     const loserScreen =
         document.getElementById("loserScreen");
@@ -3505,12 +3632,69 @@ function tryDatesAgain() {
     const dateScreen =
         document.getElementById("dateScreen");
 
+    const timeScreen =
+        document.getElementById("timeScreen");
+
+    const customContainer =
+        document.getElementById(
+            "customTimeContainer"
+        );
+
+    const customInput =
+        document.getElementById(
+            "customTimeInput"
+        );
+
+
+    const from =
+        loserScreen.dataset.from || "date";
+
+
+    loserScreen.classList.add("hidden");
+
 
     /*
-       Clear None selection
+       They came from the TIME page
+    */
+
+    if (from === "time") {
+
+        selectedTimes = [];
+
+
+        document
+            .querySelectorAll(".time-card")
+            .forEach(function(card) {
+
+                card.classList.remove("selected");
+
+            });
+
+
+        customContainer.classList.remove("show");
+
+        customInput.value = "";
+
+
+        setTimeout(function() {
+
+            timeScreen.classList.remove("hidden");
+
+            timeScreen.scrollTop = 0;
+
+        }, 300);
+
+
+        return;
+    }
+
+
+    /*
+       They came from the DATE page
     */
 
     selectedDates = [];
+
 
     document
         .querySelectorAll(".date-card")
@@ -3521,12 +3705,11 @@ function tryDatesAgain() {
         });
 
 
-    loserScreen.classList.add("hidden");
-
-
     setTimeout(function() {
 
         dateScreen.classList.remove("hidden");
+
+        dateScreen.scrollTop = 0;
 
     }, 300);
 

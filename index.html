@@ -579,14 +579,17 @@ input {
 }
 
 #welcomeScreen h1 {
-    font-size:
-        clamp(3.2rem, 10vw, 8rem);
-
-    line-height: 0.9;
+    font-size: clamp(2.1rem, 10vw, 8rem);
+    line-height: 0.95;
 
     text-transform: uppercase;
-
     letter-spacing: -0.05em;
+
+    max-width: 95vw;
+    margin: 0 auto;
+
+    overflow-wrap: normal;
+    white-space: nowrap;
 
     text-shadow:
         0 0 25px rgba(255,255,255,0.15),
@@ -821,6 +824,21 @@ input {
     .keyboard-help {
         display: none;
     }
+   #welcomeScreen h1 {
+    font-size: clamp(2rem, 10.5vw, 3.2rem);
+    letter-spacing: -0.06em;
+}
+
+.welcome-content {
+    width: 100%;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.game-night {
+    font-size: clamp(1.05rem, 5vw, 1.6rem);
+    letter-spacing: 0.12em;
+}
 
 }
 
@@ -1342,44 +1360,49 @@ function hitWall() {
    KEYBOARD
 ========================================================= */
 
-document.addEventListener(
-    "keydown",
-    function(event) {
+document.addEventListener("keydown", function(event) {
 
-        const key =
-            event.key.toLowerCase();
-
-
-        const controls = {
-
-            "arrowup": [0,-1],
-            "w": [0,-1],
-
-            "arrowdown": [0,1],
-            "s": [0,1],
-
-            "arrowleft": [-1,0],
-            "a": [-1,0],
-
-            "arrowright": [1,0],
-            "d": [1,0]
-
-        };
-
-
-        if (controls[key]) {
-
-            event.preventDefault();
-
-            movePlayer(
-                controls[key][0],
-                controls[key][1]
-            );
-
-        }
-
+    // Maze controls should only work while the maze is active
+    if (gameFinished) {
+        return;
     }
-);
+
+    // Never intercept keys while someone is typing
+    const activeElement = document.activeElement;
+
+    if (
+        activeElement.tagName === "INPUT" ||
+        activeElement.tagName === "TEXTAREA"
+    ) {
+        return;
+    }
+
+    const key = event.key.toLowerCase();
+
+    const controls = {
+        "arrowup": [0, -1],
+        "w": [0, -1],
+
+        "arrowdown": [0, 1],
+        "s": [0, 1],
+
+        "arrowleft": [-1, 0],
+        "a": [-1, 0],
+
+        "arrowright": [1, 0],
+        "d": [1, 0]
+    };
+
+    if (controls[key]) {
+
+        event.preventDefault();
+
+        movePlayer(
+            controls[key][0],
+            controls[key][1]
+        );
+    }
+});
 
 
 /* =========================================================
@@ -1579,11 +1602,7 @@ function saveName() {
       availability screen next.
     */
 
-    alert(
-        "Hello " +
-        guestName +
-        "! 🎮"
-    );
+    console.log("Guest name:", guestName);
 
 }
 

@@ -2305,7 +2305,7 @@ height: calc(100% / var(--maze-rows));
                     </span>
 
                     <span class="time-zone">
-                        Tragic, but understandable
+                        Tragic
                     </span>
                 </span>
 
@@ -2637,6 +2637,49 @@ let gameFinished = false;
 
 
 /* =========================================================
+   SAVED GAME / RSVP DATA
+========================================================= */
+
+/*
+   Replace the text below with YOUR deployed
+   Google Apps Script /exec URL.
+*/
+
+const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbwqNsNU9OViM4z_-x13CDyBmfe2sFG-h1mcbJFJU_U2Xg8d6jiMg9h0Es4lIohlmRxsfQ/exec";
+
+
+/*
+   Maze statistics
+*/
+
+const mazeStartTime =
+    performance.now();
+
+let mazeCompletionTime = null;
+
+let wallBumps = 0;
+
+
+/*
+   Google Sheet response ID.
+
+   This is created by Apps Script when the RSVP
+   is saved and is then used to update the SAME
+   row with a game suggestion.
+*/
+
+let responseId = null;
+
+
+/*
+   Prevent accidental duplicate RSVP submissions.
+*/
+
+let rsvpSaving = false;
+
+
+/* =========================================================
    CREATE MAZE
 ========================================================= */
 
@@ -2797,6 +2840,14 @@ const wallMessages = [
 
 function hitWall() {
 
+    /*
+       Every attempted movement into a wall
+       counts as one leaderboard bump.
+    */
+
+    wallBumps++;
+
+
     const message =
         wallMessages[
             Math.floor(
@@ -2804,6 +2855,7 @@ function hitWall() {
                 wallMessages.length
             )
         ];
+
 
     mazeMessage.textContent =
         message;
@@ -2908,7 +2960,15 @@ function unlockGameNight() {
     if (gameFinished) {
         return;
     }
-
+   mazeCompletionTime =
+        Number(
+            (
+                (
+                    performance.now() -
+                    mazeStartTime
+                ) / 1000
+            ).toFixed(3)
+        );
 
     gameFinished = true;
 
@@ -3395,21 +3455,148 @@ function backToDates() {
 
 }
 
-
-/* =========================================================
-   CONTINUE FROM TIMES
+   /* =========================================================
+   SAVE RSVP TO GOOGLE SHEETS
 ========================================================= */
 
-function continueFromTimes() {
-
-    const error =
-        document.getElementById("timeError");
+async function saveRSVP() {
 
     const customInput =
         document.getElementById(
             "customTimeInput"
         );
 
+
+    /*
+       Build a clean copy of the selected times.
+
+       We don't modify selectedTimes itself here.
+    */
+
+    const timesToSave =
+        selectedTimes.map(
+            function(time) {
+
+                if (time === "custom") {
+
+                    return (
+                        "Custom: " +
+                        customInput.value.trim()
+                    );
+
+                }
+
+                return time;
+
+            }
+        );
+
+
+    const data = {
+
+        action: "saveRSVP",
+
+        name: guestName,
+
+        dates: selectedDates,
+
+        times: timesToSave,
+
+        mazeTime:
+            mazeCompletionTime,
+
+        wallBumps:
+            wallBumps
+
+    };
+
+
+    const response =
+        await fetch(
+            SCRIPT_URL,
+            {
+                method: "POST",
+
+                /*
+                   text/plain avoids an unnecessary
+                   browser CORS preflight with
+                   Apps Script.
+                */
+
+                headers: {
+                    "Content-Type":
+                        "text/plain;charset=utf-8"
+                },
+
+                body:
+                    JSON.stringify(data)
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Could not save RSVP"
+        );
+
+    }
+
+
+    const result =
+        await response.json();
+
+
+    if (!result.success) {
+
+        throw new Error(
+            result.error ||
+            "Could not save RSVP"
+        );
+
+    }
+
+
+    /*
+       Remember the ID returned by Apps Script.
+
+       We need this later to put the suggestion
+       into this exact same row.
+    */
+
+    responseId =
+        result.responseId;
+
+
+    return result;
+
+}
+
+/* =========================================================
+   CONTINUE FROM TIMES
+========================================================= */
+
+async function continueFromTimes() {
+
+    const error =
+        document.getElementById(
+            "timeError"
+        );
+
+    const customInput =
+        document.getElementById(
+            "customTimeInput"
+        );
+
+    const continueButton =
+        document.querySelector(
+            ".time-continue"
+        );
+
+
+    /*
+       Nothing selected
+    */
 
     if (selectedTimes.length === 0) {
 
@@ -3424,12 +3611,12 @@ function continueFromTimes() {
 
 
     /*
-       Safety check:
-       if None is somehow selected,
-       go to Boo Loser.
+       None → Boo Loser
     */
 
-    if (selectedTimes.includes("none")) {
+    if (
+        selectedTimes.includes("none")
+    ) {
 
         showLoserPage("time");
 
@@ -3439,7 +3626,8 @@ function continueFromTimes() {
 
 
     /*
-       Custom selected but left blank
+       Custom selected but no custom
+       time entered
     */
 
     if (
@@ -3460,34 +3648,85 @@ function continueFromTimes() {
 
 
     /*
-       Replace "custom" with their actual answer
+       Don't allow them to click Continue
+       repeatedly while the request is saving.
     */
 
-    if (selectedTimes.includes("custom")) {
-
-        selectedTimes =
-            selectedTimes.map(function(time) {
-
-                if (time === "custom") {
-
-                    return "Custom: " +
-                        customInput.value.trim();
-
-                }
-
-                return time;
-
-            });
-
+    if (rsvpSaving) {
+        return;
     }
 
 
-    console.log("Guest:", guestName);
-    console.log("Dates:", selectedDates);
-    console.log("Times:", selectedTimes);
+    rsvpSaving = true;
+
+    error.classList.remove("show");
 
 
-    showFinalPage();
+    /*
+       Give visual feedback while saving.
+    */
+
+    const originalButtonText =
+        continueButton.innerHTML;
+
+
+    continueButton.disabled = true;
+
+    continueButton.textContent =
+        "SAVING...";
+
+
+    try {
+
+        const result =
+            await saveRSVP();
+
+
+        console.log(
+            "RSVP saved:",
+            result
+        );
+
+
+        /*
+           IMPORTANT:
+
+           The final screen is shown ONLY
+           after Google confirms the RSVP
+           has been saved.
+        */
+
+        showFinalPage();
+
+    }
+
+    catch (errorObject) {
+
+        console.error(
+            "RSVP save failed:",
+            errorObject
+        );
+
+
+        error.textContent =
+            "Couldn't save your response 😭 Try again.";
+
+        error.classList.add("show");
+
+
+        continueButton.disabled =
+            false;
+
+        continueButton.innerHTML =
+            originalButtonText;
+
+    }
+
+    finally {
+
+        rsvpSaving = false;
+
+    }
 
 }
 
@@ -3528,15 +3767,23 @@ function showFinalPage() {
 }
 
 
-   function submitSuggestion() {
+   async function submitSuggestion() {
 
     const input =
-        document.getElementById("gameSuggestion");
+        document.getElementById(
+            "gameSuggestion"
+        );
 
     const message =
         document.getElementById(
             "suggestionMessage"
         );
+
+    const button =
+        input
+            .closest(".suggestion-section")
+            .querySelector(".main-button");
+
 
     const suggestion =
         input.value.trim();
@@ -3552,14 +3799,122 @@ function showFinalPage() {
     }
 
 
-    console.log(
-        "Game suggestion:",
-        suggestion
-    );
+    /*
+       This should always exist because the
+       RSVP must save before the final screen
+       is shown.
+    */
+
+    if (!responseId) {
+
+        message.textContent =
+            "Something went wrong finding your RSVP 😭";
+
+        return;
+
+    }
 
 
-    message.textContent =
-        "Noted ✍️ excellent contribution.";
+    const originalButtonText =
+        button.textContent;
+
+
+    button.disabled = true;
+
+    button.textContent =
+        "SAVING...";
+
+    message.textContent = "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                SCRIPT_URL,
+                {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "text/plain;charset=utf-8"
+                    },
+
+                    body:
+                        JSON.stringify({
+
+                            action:
+                                "updateSuggestion",
+
+                            responseId:
+                                responseId,
+
+                            suggestion:
+                                suggestion
+
+                        })
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not save suggestion"
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.error ||
+                "Could not save suggestion"
+            );
+
+        }
+
+
+        message.textContent =
+            "Noted ✍️ excellent contribution.";
+
+
+        /*
+           Keep the text visible so they can
+           see what they submitted, but change
+           the button in case they edit it.
+        */
+
+        button.textContent =
+            "UPDATE SUGGESTION";
+
+        button.disabled = false;
+
+    }
+
+    catch (errorObject) {
+
+        console.error(
+            "Suggestion save failed:",
+            errorObject
+        );
+
+
+        message.textContent =
+            "Couldn't save that 😭 Try again.";
+
+
+        button.textContent =
+            originalButtonText;
+
+        button.disabled = false;
+
+    }
 
 }
 

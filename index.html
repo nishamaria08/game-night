@@ -1195,6 +1195,506 @@ height: calc(100% / var(--maze-rows));
     }
 
 }
+      /* =========================================================
+   SCREEN 4 — TIME
+========================================================= */
+
+#timeScreen {
+    z-index: 5;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            #29134f,
+            #10091f 70%
+        );
+
+    overflow-y: auto;
+
+    padding: 24px 16px;
+}
+
+.time-content {
+    width: min(560px, 90vw);
+
+    margin: auto;
+
+    padding: 25px 0;
+
+    text-align: center;
+}
+
+.time-content h2 {
+    font-size:
+        clamp(2rem, 6vw, 4rem);
+
+    line-height: 1.05;
+
+    margin-bottom: 10px;
+}
+
+.time-subtitle {
+    color:
+        rgba(255,255,255,0.5);
+
+    margin-bottom: 25px;
+}
+
+
+/* TIME CARDS */
+
+.time-options {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 9px;
+}
+
+.time-card {
+    width: 100%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 15px 20px;
+
+    border:
+        1px solid rgba(255,255,255,0.13);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,0.055);
+
+    color: white;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease;
+}
+
+.time-card:hover {
+    transform:
+        translateY(-2px);
+
+    border-color:
+        rgba(255,142,216,0.5);
+
+    background:
+        rgba(255,255,255,0.085);
+}
+
+.time-main {
+    display: block;
+
+    font-size: 1rem;
+
+    font-weight: bold;
+}
+
+.time-zone {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 0.75rem;
+
+    color:
+        rgba(255,255,255,0.45);
+}
+
+
+/* SELECTED */
+
+.time-card.selected {
+    border-color: #ff8ed8;
+
+    background:
+        rgba(255,142,216,0.13);
+
+    box-shadow:
+        0 0 25px
+        rgba(255,142,216,0.08);
+}
+
+.time-card.selected .selection-circle {
+    background: #ff8ed8;
+
+    color: #160a29;
+
+    border-color: #ff8ed8;
+
+    transform: scale(1.05);
+}
+
+
+/* CUSTOM TIME */
+
+.custom-time-container {
+    max-height: 0;
+
+    opacity: 0;
+
+    overflow: hidden;
+
+    transition:
+        max-height 0.3s ease,
+        opacity 0.3s ease;
+}
+
+.custom-time-container.show {
+    max-height: 100px;
+
+    opacity: 1;
+}
+
+.custom-time-input {
+    width: 100%;
+
+    margin-top: 3px;
+
+    padding: 15px 18px;
+
+    border:
+        1px solid rgba(255,142,216,0.35);
+
+    border-radius: 14px;
+
+    background:
+        rgba(255,255,255,0.07);
+
+    color: white;
+
+    outline: none;
+
+    text-align: center;
+}
+
+.custom-time-input:focus {
+    border-color: #ff8ed8;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(255,142,216,0.08);
+}
+
+.custom-time-input::placeholder {
+    color:
+        rgba(255,255,255,0.3);
+}
+
+
+/* NONE */
+
+.none-time-card {
+    margin-top: 5px;
+
+    opacity: 0.75;
+}
+
+.none-time-card.selected {
+    opacity: 1;
+}
+
+
+/* ERROR */
+
+.time-error {
+    height: 20px;
+
+    margin-top: 10px;
+
+    color: #ff8ed8;
+
+    font-size: 0.8rem;
+
+    opacity: 0;
+}
+
+.time-error.show {
+    opacity: 1;
+}
+
+.time-continue {
+    margin-top: 12px;
+}
+
+
+/* =========================================================
+   SCREEN 5 — FINAL
+========================================================= */
+
+#finalScreen {
+    z-index: 7;
+
+    background:
+        radial-gradient(
+            circle at 50% 20%,
+            #29134f,
+            #10091f 70%
+        );
+
+    overflow-y: auto;
+
+    padding: 45px 16px;
+}
+
+.final-content {
+    width: min(900px, 92vw);
+
+    margin: auto;
+
+    text-align: center;
+}
+
+.final-small {
+    color: #ff8ed8;
+
+    font-size: 0.75rem;
+
+    letter-spacing: 0.4em;
+
+    margin-bottom: 12px;
+}
+
+.final-content > h2 {
+    font-size:
+        clamp(2.3rem, 7vw, 5rem);
+
+    line-height: 0.95;
+
+    max-width: 800px;
+
+    margin: auto;
+}
+
+.final-subtitle {
+    margin-top: 20px;
+
+    color:
+        rgba(255,255,255,0.55);
+}
+
+
+/* GAME CARDS */
+
+.game-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 18px;
+
+    margin-top: 30px;
+}
+
+.game-card {
+    padding: 14px;
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,255,255,0.055);
+
+    backdrop-filter:
+        blur(10px);
+
+    overflow: hidden;
+
+    transition:
+        transform 0.25s ease,
+        border-color 0.25s ease,
+        background 0.25s ease;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+
+    border-color:
+        rgba(255,142,216,0.35);
+
+    background:
+        rgba(255,255,255,0.075);
+}
+
+
+/* GAME IMAGES */
+
+.game-image-wrapper {
+    width: 100%;
+    height: 170px;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+    background:
+        rgba(255,255,255,0.04);
+}
+
+.game-image {
+    width: 100%;
+    height: 100%;
+
+    display: block;
+
+    object-fit: cover;
+
+    transition:
+        transform 0.35s ease;
+}
+
+.game-card:hover .game-image {
+    transform: scale(1.06);
+}
+
+
+/* GAME TEXT */
+
+.game-info {
+    padding: 0 4px 6px;
+}
+
+.game-card h3 {
+    font-size: 1.05rem;
+
+    letter-spacing: 0.1em;
+
+    color: #ff8ed8;
+
+    margin-bottom: 9px;
+}
+
+.game-card p {
+    color:
+        rgba(255,255,255,0.58);
+
+    font-size: 0.85rem;
+
+    line-height: 1.55;
+}
+
+/* SUGGESTIONS */
+
+.suggestion-section {
+    max-width: 600px;
+
+    margin:
+        55px auto 20px;
+
+    padding-top: 35px;
+
+    border-top:
+        1px solid rgba(255,255,255,0.1);
+}
+
+.suggestion-section h3 {
+    font-size:
+        clamp(1.6rem, 4vw, 2.5rem);
+}
+
+.suggestion-subtitle {
+    margin-top: 7px;
+
+    color:
+        rgba(255,255,255,0.45);
+}
+
+.suggestion-input {
+    display: block;
+
+    width: 100%;
+
+    min-height: 110px;
+
+    margin-top: 20px;
+
+    padding: 18px;
+
+    resize: vertical;
+
+    border:
+        1px solid rgba(255,255,255,0.16);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,0.06);
+
+    color: white;
+
+    font: inherit;
+
+    outline: none;
+}
+
+.suggestion-input:focus {
+    border-color: #ff8ed8;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(255,142,216,0.08);
+}
+
+.suggestion-input::placeholder {
+    color:
+        rgba(255,255,255,0.3);
+}
+
+.suggestion-section .main-button {
+    margin-top: 18px;
+}
+
+.suggestion-message {
+    height: 20px;
+
+    margin-top: 15px;
+
+    color: #ff8ed8;
+
+    font-size: 0.85rem;
+}
+
+
+/* MOBILE FINAL PAGE */
+
+@media (max-width: 600px) {
+
+    #finalScreen {
+        padding:
+            35px 14px;
+    }
+
+    .game-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+    .game-image-wrapper {
+    height: 160px;
+}
+
+    .suggestion-section {
+        margin-top: 40px;
+    }
+
+}
 
 </style>
 </head>
@@ -1606,6 +2106,371 @@ height: calc(100% / var(--maze-rows));
 
 </section>
 
+<!-- =====================================================
+     SCREEN 4 — TIME SELECTION
+===================================================== -->
+
+<section
+    class="screen hidden"
+    id="timeScreen"
+>
+
+    <div class="time-content">
+
+        <p class="small-title">
+            ONE MORE THING...
+        </p>
+
+        <h2>
+            What time works for you?
+        </h2>
+
+        <p class="time-subtitle">
+            Pick as many as you want. All times are in IST.
+        </p>
+
+
+        <div class="time-options">
+
+            <button
+                type="button"
+                class="time-card"
+                data-time="8 PM - 9 PM IST"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        8 PM – 9 PM
+                    </span>
+
+                    <span class="time-zone">
+                        IST
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="time-card"
+                data-time="9 PM - 10 PM IST"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        9 PM – 10 PM
+                    </span>
+
+                    <span class="time-zone">
+                        IST
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="time-card"
+                data-time="10 PM - 11 PM IST"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        10 PM – 11 PM
+                    </span>
+
+                    <span class="time-zone">
+                        IST
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="time-card"
+                data-time="11 PM - 12 AM IST"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        11 PM – 12 AM
+                    </span>
+
+                    <span class="time-zone">
+                        IST
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <!-- CUSTOM TIME -->
+
+            <button
+                type="button"
+                class="time-card custom-time-card"
+                data-time="custom"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        Something else ✍️
+                    </span>
+
+                    <span class="time-zone">
+                        Let me suggest a time
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <div
+                class="custom-time-container"
+                id="customTimeContainer"
+            >
+
+                <input
+                    type="text"
+                    id="customTimeInput"
+                    class="custom-time-input"
+                    placeholder="e.g. 7 PM IST, anytime after 10..."
+                    maxlength="100"
+                >
+
+            </div>
+
+
+            <!-- NONE -->
+
+            <button
+                type="button"
+                class="time-card none-time-card"
+                data-time="none"
+                onclick="toggleTime(this)"
+            >
+                <span>
+                    <span class="time-main">
+                        None of these work 😭
+                    </span>
+
+                    <span class="time-zone">
+                        Tragic, but understandable
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+        </div>
+
+
+        <p
+            class="time-error"
+            id="timeError"
+        >
+            Pick at least one option 
+        </p>
+
+
+        <button
+            class="main-button time-continue"
+            onclick="continueFromTimes()"
+        >
+            CONTINUE
+
+            <span class="arrow">
+                →
+            </span>
+        </button>
+
+    </div>
+
+</section>
+
+   <!-- =====================================================
+     SCREEN 5 — THANK YOU / GAMES
+===================================================== -->
+
+<section
+    class="screen hidden"
+    id="finalScreen"
+>
+
+    <div class="final-content">
+
+        <p class="final-small">
+            YOU'RE IN 🎉
+        </p>
+
+        <h2 id="finalGreeting">
+            YAY, THANKS FOR SIGNING UP!
+        </h2>
+
+        <p class="final-subtitle">
+            Here are some games I've found so far...
+        </p>
+
+
+        <div class="game-grid">
+
+    <!-- GARTIC PHONE -->
+
+    <div class="game-card">
+
+        <div class="game-image-wrapper">
+
+            <img
+                src="image/gartic.png"
+                alt="Gartic Phone"
+                class="game-image"
+            >
+
+        </div>
+
+        <div class="game-info">
+
+            <h3>
+                GARTIC PHONE
+            </h3>
+
+            <p>
+                A chaotic mix of drawing and guessing.
+                Draw what you see, guess what your friends
+                drew, and watch everything slowly go off
+                the rails.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- COVIDOPOLY -->
+
+    <div class="game-card">
+
+        <div class="game-image-wrapper">
+
+            <img
+                src="image/covidopoly.png"
+                alt="Covidopoly"
+                class="game-image"
+            >
+
+        </div>
+
+        <div class="game-info">
+
+            <h3>
+                COVIDOPOLY
+            </h3>
+
+            <p>
+                An online board game for making questionable
+                decisions, competing with your friends, and
+                potentially destroying friendships.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- AMONG US -->
+
+    <div class="game-card">
+
+        <div class="game-image-wrapper">
+
+            <img
+                src="image/amongUs.png"
+                alt="Among Us"
+                class="game-image"
+            >
+
+        </div>
+
+        <div class="game-info">
+
+            <h3>
+                AMONG US
+            </h3>
+
+            <p>
+                Complete tasks, accuse your friends, lie
+                convincingly, and try to figure out who
+                absolutely cannot be trusted.
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+        <div class="suggestion-section">
+
+            <p class="small-title">
+                GOT A BETTER IDEA?
+            </p>
+
+            <h3>
+                Any game suggestions?
+            </h3>
+
+            <p class="suggestion-subtitle">
+                Drop them here 👇
+            </p>
+
+
+            <textarea
+                id="gameSuggestion"
+                class="suggestion-input"
+                placeholder="Game name, link, unhinged idea..."
+                maxlength="300"
+            ></textarea>
+
+
+            <button
+                class="main-button"
+                onclick="submitSuggestion()"
+            >
+                SUBMIT SUGGESTION
+            </button>
+
+
+            <p
+                class="suggestion-message"
+                id="suggestionMessage"
+            ></p>
+
+        </div>
+
+    </div>
+
+</section>
 
 
 <!-- =====================================================
@@ -2314,6 +3179,293 @@ function continueFromDates() {
         "Selected dates:",
         selectedDates
     );
+   showTimePage();
+
+}
+
+   function showTimePage() {
+
+    const dateScreen =
+        document.getElementById("dateScreen");
+
+    const timeScreen =
+        document.getElementById("timeScreen");
+
+
+    dateScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        timeScreen.classList.remove("hidden");
+
+    }, 300);
+
+}
+
+   /* =========================================================
+   TIME SELECTION
+========================================================= */
+
+let selectedTimes = [];
+
+
+function toggleTime(card) {
+
+    const time =
+        card.dataset.time;
+
+    const allCards =
+        document.querySelectorAll(".time-card");
+
+    const noneCard =
+        document.querySelector(
+            '.time-card[data-time="none"]'
+        );
+
+    const customContainer =
+        document.getElementById(
+            "customTimeContainer"
+        );
+
+    const customInput =
+        document.getElementById(
+            "customTimeInput"
+        );
+
+    const error =
+        document.getElementById("timeError");
+
+
+    error.classList.remove("show");
+
+
+    /*
+       NONE clears everything else
+    */
+
+    if (time === "none") {
+
+        allCards.forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+
+        selectedTimes = ["none"];
+
+
+        customContainer.classList.remove("show");
+
+        customInput.value = "";
+
+
+        card.classList.add("selected");
+
+        return;
+
+    }
+
+
+    /*
+       Choosing a real/custom time removes NONE
+    */
+
+    noneCard.classList.remove("selected");
+
+    selectedTimes =
+        selectedTimes.filter(
+            item => item !== "none"
+        );
+
+
+    /*
+       Toggle option
+    */
+
+    if (card.classList.contains("selected")) {
+
+        card.classList.remove("selected");
+
+        selectedTimes =
+            selectedTimes.filter(
+                item => item !== time
+            );
+
+
+        if (time === "custom") {
+
+            customContainer.classList.remove("show");
+
+            customInput.value = "";
+
+        }
+
+    }
+
+    else {
+
+        card.classList.add("selected");
+
+        selectedTimes.push(time);
+
+
+        if (time === "custom") {
+
+            customContainer.classList.add("show");
+
+            setTimeout(function() {
+
+                customInput.focus();
+
+            }, 300);
+
+        }
+
+    }
+
+}
+
+   function continueFromTimes() {
+
+    const error =
+        document.getElementById("timeError");
+
+    const customInput =
+        document.getElementById(
+            "customTimeInput"
+        );
+
+
+    if (selectedTimes.length === 0) {
+
+        error.textContent =
+            "Pick at least one option 👀";
+
+        error.classList.add("show");
+
+        return;
+
+    }
+
+
+    /*
+       Custom selected but left blank
+    */
+
+    if (
+        selectedTimes.includes("custom") &&
+        customInput.value.trim() === ""
+    ) {
+
+        error.textContent =
+            "Tell me what time works for you 👀";
+
+        error.classList.add("show");
+
+        customInput.focus();
+
+        return;
+
+    }
+
+
+    /*
+       Replace "custom" with their actual answer
+    */
+
+    if (selectedTimes.includes("custom")) {
+
+        selectedTimes =
+            selectedTimes.map(function(time) {
+
+                if (time === "custom") {
+
+                    return "Custom: " +
+                        customInput.value.trim();
+
+                }
+
+                return time;
+
+            });
+
+    }
+
+
+    console.log("Guest:", guestName);
+    console.log("Dates:", selectedDates);
+    console.log("Times:", selectedTimes);
+
+
+    showFinalPage();
+
+}
+
+   function showFinalPage() {
+
+    const timeScreen =
+        document.getElementById("timeScreen");
+
+    const finalScreen =
+        document.getElementById("finalScreen");
+
+    const greeting =
+        document.getElementById("finalGreeting");
+
+
+    greeting.textContent =
+        "YAY " +
+        guestName.toUpperCase() +
+        ", THANKS FOR SIGNING UP!";
+
+
+    timeScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        finalScreen.classList.remove("hidden");
+
+        finalScreen.scrollTop = 0;
+
+    }, 300);
+
+}
+
+   function submitSuggestion() {
+
+    const input =
+        document.getElementById("gameSuggestion");
+
+    const message =
+        document.getElementById(
+            "suggestionMessage"
+        );
+
+    const suggestion =
+        input.value.trim();
+
+
+    if (suggestion === "") {
+
+        message.textContent =
+            "No suggestion? Rude 😔";
+
+        return;
+
+    }
+
+
+    console.log(
+        "Game suggestion:",
+        suggestion
+    );
+
+
+    message.textContent =
+        "Noted ✍️ excellent contribution.";
 
 }
 

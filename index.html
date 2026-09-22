@@ -1515,7 +1515,192 @@ height: calc(100% / var(--maze-rows));
         rgba(255,255,255,0.55);
 }
 
+/* =========================================================
+   MAZE LEADERBOARD
+========================================================= */
 
+.leaderboard-section {
+    width: min(720px, 100%);
+
+    margin:
+        40px auto 55px;
+
+    padding: 28px;
+
+    border:
+        1px solid rgba(255,255,255,0.12);
+
+    border-radius: 24px;
+
+    background:
+        rgba(255,255,255,0.055);
+
+    backdrop-filter:
+        blur(12px);
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,0.15);
+}
+
+
+.leaderboard-heading h3 {
+    margin-top: 5px;
+
+    font-size:
+        clamp(1.5rem, 4vw, 2.3rem);
+
+    letter-spacing: 0.08em;
+}
+
+
+.leaderboard-heading > p:last-child {
+    margin-top: 8px;
+
+    color:
+        rgba(255,255,255,0.45);
+
+    font-size: 0.85rem;
+}
+
+
+.leaderboard-status {
+    margin-top: 25px;
+
+    color:
+        rgba(255,255,255,0.5);
+
+    font-size: 0.85rem;
+}
+
+
+.leaderboard-table-wrapper {
+    display: none;
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    overflow-x: auto;
+}
+
+
+.leaderboard-table {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    text-align: left;
+}
+
+
+.leaderboard-table th {
+    padding:
+        0 12px 12px;
+
+    color:
+        rgba(255,255,255,0.35);
+
+    font-size: 0.65rem;
+
+    letter-spacing: 0.12em;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.1);
+}
+
+
+.leaderboard-table td {
+    padding:
+        13px 12px;
+
+    color:
+        rgba(255,255,255,0.75);
+
+    font-size: 0.85rem;
+
+    border-bottom:
+        1px solid rgba(255,255,255,0.06);
+}
+
+
+.leaderboard-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+.leaderboard-rank {
+    width: 45px;
+
+    font-weight: bold;
+
+    color: #ff8ed8 !important;
+}
+
+
+.leaderboard-name {
+    font-weight: bold;
+
+    color: white !important;
+}
+
+
+/*
+   Highlight the person currently
+   using the website.
+*/
+
+.leaderboard-table tr.current-player {
+    background:
+        rgba(255,142,216,0.12);
+}
+
+
+.leaderboard-table tr.current-player td {
+    color: white;
+}
+
+
+.you-badge {
+    display: inline-block;
+
+    margin-left: 7px;
+
+    padding:
+        2px 6px;
+
+    border-radius: 20px;
+
+    background:
+        rgba(255,142,216,0.18);
+
+    color: #ff8ed8;
+
+    font-size: 0.55rem;
+
+    letter-spacing: 0.08em;
+
+    vertical-align: middle;
+}
+
+
+.your-rank {
+    margin-top: 18px;
+
+    color: #ff8ed8;
+
+    font-size: 0.85rem;
+
+    font-weight: bold;
+}
+
+
+.games-heading {
+    margin-top: 15px;
+
+    color:
+        rgba(255,255,255,0.55);
+}
 /* GAME CARDS */
 
 .game-grid {
@@ -1724,6 +1909,28 @@ height: calc(100% / var(--maze-rows));
     .suggestion-section {
         margin-top: 40px;
     }
+
+   .leaderboard-section {
+    padding:
+        22px 12px;
+
+    margin:
+        30px auto 40px;
+}
+
+
+.leaderboard-table th,
+.leaderboard-table td {
+    padding:
+        11px 7px;
+
+    font-size: 0.7rem;
+}
+
+
+.leaderboard-table th {
+    font-size: 0.55rem;
+}
 
 }
 
@@ -2370,8 +2577,89 @@ height: calc(100% / var(--maze-rows));
         </h2>
 
         <p class="final-subtitle">
-            Here are some games I've found so far...
+    You survived the maze. Let's see how you did.
+</p>
+
+
+<!-- =====================================================
+     MAZE LEADERBOARD
+===================================================== -->
+
+<div class="leaderboard-section">
+
+    <div class="leaderboard-heading">
+
+        <p class="small-title">
+            🏆 HALL OF FAME
         </p>
+
+        <h3>
+            MAZE LEADERBOARD
+        </h3>
+
+        <p>
+            Speed is important. Walls are expensive.
+        </p>
+
+    </div>
+
+
+    <div
+        class="leaderboard-status"
+        id="leaderboardStatus"
+    >
+        Loading the chaos...
+    </div>
+
+
+    <div
+        class="leaderboard-table-wrapper"
+        id="leaderboardTableWrapper"
+    >
+
+        <table class="leaderboard-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>#</th>
+
+                    <th>PLAYER</th>
+
+                    <th>TIME</th>
+
+                    <th>BUMPS</th>
+
+                    <th>SCORE</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody id="leaderboardBody">
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <p
+        class="your-rank"
+        id="yourRank"
+    ></p>
+
+</div>
+
+
+<p class="games-heading">
+    Here are some games I've found so far...
+</p>
+
+
+<div class="game-grid">
 
 
         <div class="game-grid">
@@ -3730,7 +4018,273 @@ async function continueFromTimes() {
 
 }
 
+/* =========================================================
+   LOAD LEADERBOARD
+========================================================= */
 
+async function loadLeaderboard() {
+
+    const status =
+        document.getElementById(
+            "leaderboardStatus"
+        );
+
+    const wrapper =
+        document.getElementById(
+            "leaderboardTableWrapper"
+        );
+
+    const body =
+        document.getElementById(
+            "leaderboardBody"
+        );
+
+    const rankMessage =
+        document.getElementById(
+            "yourRank"
+        );
+
+
+    status.textContent =
+        "Loading the chaos...";
+
+    status.style.display =
+        "block";
+
+    wrapper.style.display =
+        "none";
+
+    rankMessage.textContent =
+        "";
+
+
+    try {
+
+        const response =
+            await fetch(
+                SCRIPT_URL +
+                "?action=getLeaderboard"
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Could not load leaderboard"
+            );
+
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (!result.success) {
+
+            throw new Error(
+                result.error ||
+                "Could not load leaderboard"
+            );
+
+        }
+
+
+        const leaderboard =
+            result.leaderboard || [];
+
+
+        body.innerHTML = "";
+
+
+        if (leaderboard.length === 0) {
+
+            status.textContent =
+                "Nobody is on the board yet 👀";
+
+            return;
+
+        }
+
+
+        let myRank = null;
+
+
+        leaderboard.forEach(
+            function(player, index) {
+
+                const row =
+                    document.createElement("tr");
+
+
+                const isMe =
+                    player.responseId ===
+                    responseId;
+
+
+                if (isMe) {
+
+                    row.classList.add(
+                        "current-player"
+                    );
+
+                    myRank =
+                        index + 1;
+
+                }
+
+
+                /*
+                   Ranking display
+                */
+
+                let rankDisplay =
+                    index + 1;
+
+
+                if (index === 0) {
+
+                    rankDisplay =
+                        "🥇";
+
+                }
+
+                else if (index === 1) {
+
+                    rankDisplay =
+                        "🥈";
+
+                }
+
+                else if (index === 2) {
+
+                    rankDisplay =
+                        "🥉";
+
+                }
+
+
+                /*
+                   Build cells safely with
+                   textContent rather than
+                   inserting user names as HTML.
+                */
+
+                const rankCell =
+                    document.createElement("td");
+
+                rankCell.className =
+                    "leaderboard-rank";
+
+                rankCell.textContent =
+                    rankDisplay;
+
+
+                const nameCell =
+                    document.createElement("td");
+
+                nameCell.className =
+                    "leaderboard-name";
+
+                nameCell.textContent =
+                    player.name;
+
+
+                if (isMe) {
+
+                    const badge =
+                        document.createElement(
+                            "span"
+                        );
+
+                    badge.className =
+                        "you-badge";
+
+                    badge.textContent =
+                        "YOU";
+
+                    nameCell.appendChild(
+                        badge
+                    );
+
+                }
+
+
+                const timeCell =
+                    document.createElement("td");
+
+                timeCell.textContent =
+                    Number(
+                        player.time
+                    ).toFixed(2) +
+                    "s";
+
+
+                const bumpCell =
+                    document.createElement("td");
+
+                bumpCell.textContent =
+                    player.bumps;
+
+
+                const scoreCell =
+                    document.createElement("td");
+
+                scoreCell.textContent =
+                    Number(
+                        player.score
+                    ).toFixed(2);
+
+
+                row.appendChild(rankCell);
+
+                row.appendChild(nameCell);
+
+                row.appendChild(timeCell);
+
+                row.appendChild(bumpCell);
+
+                row.appendChild(scoreCell);
+
+
+                body.appendChild(row);
+
+            }
+        );
+
+
+        status.style.display =
+            "none";
+
+        wrapper.style.display =
+            "block";
+
+
+        if (myRank !== null) {
+
+            rankMessage.textContent =
+                "You ranked #" +
+                myRank +
+                " 👀";
+
+        }
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Leaderboard failed:",
+            error
+        );
+
+
+        status.textContent =
+            "Couldn't load the leaderboard 😭";
+
+    }
+
+}
 /* =========================================================
    FINAL PAGE
 ========================================================= */
@@ -3758,11 +4312,21 @@ function showFinalPage() {
 
     setTimeout(function() {
 
-        finalScreen.classList.remove("hidden");
+    finalScreen.classList.remove(
+        "hidden"
+    );
 
-        finalScreen.scrollTop = 0;
+    finalScreen.scrollTop = 0;
 
-    }, 300);
+
+    /*
+       RSVP is already saved at this point,
+       so load the latest leaderboard.
+    */
+
+    loadLeaderboard();
+
+}, 300);
 
 }
 

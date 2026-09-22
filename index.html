@@ -790,6 +790,280 @@ input {
     opacity: 1;
 }
 
+   /* =========================================================
+   SCREEN 3 — DATE SELECTION
+========================================================= */
+
+#dateScreen {
+    z-index: 5;
+
+    background:
+        radial-gradient(
+            circle at 50% 30%,
+            #29134f,
+            #10091f 70%
+        );
+
+    overflow-y: auto;
+}
+
+.date-content {
+    width: min(560px, 90%);
+
+    text-align: center;
+
+    padding: 30px 0;
+}
+
+.date-content h2 {
+    font-size: clamp(2rem, 6vw, 4rem);
+
+    line-height: 1.05;
+
+    margin-bottom: 10px;
+}
+
+.date-subtitle {
+    color: rgba(255,255,255,0.5);
+
+    margin-bottom: 28px;
+}
+
+
+/* OPTIONS */
+
+.date-options {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.date-card {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 17px 20px;
+
+    border:
+        1px solid rgba(255,255,255,0.13);
+
+    border-radius: 16px;
+
+    background:
+        rgba(255,255,255,0.055);
+
+    color: white;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.date-card:hover {
+    transform: translateY(-2px);
+
+    border-color:
+        rgba(255,142,216,0.5);
+
+    background:
+        rgba(255,255,255,0.085);
+}
+
+.day-name {
+    display: block;
+
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+
+.day-date {
+    display: block;
+
+    margin-top: 4px;
+
+    font-size: 0.78rem;
+
+    color:
+        rgba(255,255,255,0.45);
+}
+
+
+/* SELECTION CIRCLE */
+
+.selection-circle {
+    width: 27px;
+    height: 27px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-left: 15px;
+
+    border:
+        1px solid rgba(255,255,255,0.25);
+
+    border-radius: 50%;
+
+    color: transparent;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease,
+        transform 0.2s ease;
+}
+
+
+/* SELECTED */
+
+.date-card.selected {
+    border-color: #ff8ed8;
+
+    background:
+        rgba(255,142,216,0.13);
+
+    box-shadow:
+        0 0 25px
+        rgba(255,142,216,0.08);
+}
+
+.date-card.selected .selection-circle {
+    background: #ff8ed8;
+
+    color: #160a29;
+
+    border-color: #ff8ed8;
+
+    transform: scale(1.05);
+}
+
+
+/* NONE */
+
+.none-card {
+    margin-top: 6px;
+
+    opacity: 0.75;
+}
+
+.none-card.selected {
+    opacity: 1;
+}
+
+
+/* ERROR */
+
+.date-error {
+    height: 20px;
+
+    margin-top: 12px;
+
+    color: #ff8ed8;
+
+    font-size: 0.8rem;
+
+    opacity: 0;
+
+    transition: opacity 0.2s ease;
+}
+
+.date-error.show {
+    opacity: 1;
+}
+
+.date-continue {
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   BOO LOSER
+========================================================= */
+
+#loserScreen {
+    z-index: 6;
+
+    background:
+        radial-gradient(
+            circle,
+            #39112f,
+            #130710 70%
+        );
+}
+
+.loser-content {
+    width: min(600px, 90%);
+
+    text-align: center;
+}
+
+.loser-small {
+    font-size: 0.75rem;
+
+    letter-spacing: 0.4em;
+
+    color: rgba(255,255,255,0.5);
+
+    margin-bottom: 10px;
+}
+
+.loser-content h2 {
+    font-size:
+        clamp(3.5rem, 13vw, 8rem);
+
+    line-height: 0.9;
+
+    color: #ff6d9f;
+
+    text-shadow:
+        0 0 40px
+        rgba(255,70,130,0.25);
+}
+
+.loser-gif {
+    font-size: clamp(5rem, 15vw, 9rem);
+
+    margin: 25px 0 10px;
+
+    animation:
+        loserBounce 0.8s
+        ease-in-out infinite alternate;
+}
+
+@keyframes loserBounce {
+
+    from {
+        transform:
+            rotate(-8deg)
+            scale(0.95);
+    }
+
+    to {
+        transform:
+            rotate(8deg)
+            scale(1.05);
+    }
+
+}
+
+.loser-text {
+    color:
+        rgba(255,255,255,0.65);
+
+    font-size: 1.05rem;
+}
 
 /* =========================================================
    MOBILE
@@ -1124,7 +1398,184 @@ input {
     </div>
 
 </section>
+<!-- =====================================================
+     SCREEN 3 — AVAILABILITY
+===================================================== -->
 
+<section
+    class="screen hidden"
+    id="dateScreen"
+>
+
+    <div class="date-content">
+
+        <p class="small-title" id="dateGreeting">
+            OKAY...
+        </p>
+
+        <h2>
+            What days are you free?
+        </h2>
+
+        <p class="date-subtitle">
+            Pick as many as you want.
+        </p>
+
+
+        <div class="date-options">
+
+            <button
+                type="button"
+                class="date-card"
+                data-date="Friday, 25 September"
+                onclick="toggleDate(this)"
+            >
+                <span>
+                    <span class="day-name">
+                        Friday
+                    </span>
+
+                    <span class="day-date">
+                        25 September
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="date-card"
+                data-date="Saturday, 26 September"
+                onclick="toggleDate(this)"
+            >
+                <span>
+                    <span class="day-name">
+                        Saturday
+                    </span>
+
+                    <span class="day-date">
+                        26 September
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="date-card"
+                data-date="Sunday, 27 September"
+                onclick="toggleDate(this)"
+            >
+                <span>
+                    <span class="day-name">
+                        Sunday
+                    </span>
+
+                    <span class="day-date">
+                        27 September
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+
+            <button
+                type="button"
+                class="date-card none-card"
+                data-date="none"
+                onclick="toggleDate(this)"
+            >
+                <span>
+                    <span class="day-name">
+                        None 😬
+                    </span>
+
+                    <span class="day-date">
+                        I'm busy all three days
+                    </span>
+                </span>
+
+                <span class="selection-circle">
+                    ✓
+                </span>
+            </button>
+
+        </div>
+
+
+        <p
+            class="date-error"
+            id="dateError"
+        >
+            Pick at least one option 👀
+        </p>
+
+
+        <button
+            class="main-button date-continue"
+            onclick="continueFromDates()"
+        >
+            CONTINUE
+
+            <span class="arrow">
+                →
+            </span>
+        </button>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     BOO LOSER
+===================================================== -->
+
+<section
+    class="screen hidden"
+    id="loserScreen"
+>
+
+    <div class="loser-content">
+
+        <p class="loser-small">
+            WOW.
+        </p>
+
+        <h2>
+            BOO LOSER
+        </h2>
+
+        <div class="loser-gif">
+            👎
+        </div>
+
+        <p class="loser-text">
+            Imagine having plans.
+        </p>
+
+        <button
+            class="main-button"
+            onclick="tryDatesAgain()"
+        >
+            FINE, LET ME TRY AGAIN
+        </button>
+
+    </div>
+
+</section>
 
 
 <script>
@@ -1590,19 +2041,244 @@ function saveName() {
 
     guestName = name;
 
-    error.classList.remove(
-        "show"
-    );
+error.classList.remove("show");
+
+console.log("Guest name:", guestName);
+
+showDatePage();
+
+}
+
+/* =========================================================
+   NAME → DATE PAGE
+========================================================= */
+
+function showDatePage() {
+
+    const nameScreen =
+        document.getElementById("nameScreen");
+
+    const dateScreen =
+        document.getElementById("dateScreen");
+
+    const greeting =
+        document.getElementById("dateGreeting");
+
+
+    greeting.textContent =
+        "OKAY " +
+        guestName.toUpperCase() +
+        "...";
+
+
+    nameScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        dateScreen.classList.remove("hidden");
+
+    }, 300);
+
+}
+
+
+
+/* =========================================================
+   DATE SELECTION
+========================================================= */
+
+let selectedDates = [];
+
+
+function toggleDate(card) {
+
+    const date =
+        card.dataset.date;
+
+    const allCards =
+        document.querySelectorAll(".date-card");
+
+    const noneCard =
+        document.querySelector(
+            '.date-card[data-date="none"]'
+        );
+
+    const error =
+        document.getElementById("dateError");
+
+
+    error.classList.remove("show");
 
 
     /*
-      Temporary test.
+       NONE behaves separately.
 
-      We'll replace this with the
-      availability screen next.
+       Choosing None clears all real dates.
     */
 
-    console.log("Guest name:", guestName);
+    if (date === "none") {
+
+        allCards.forEach(function(item) {
+
+            item.classList.remove("selected");
+
+        });
+
+
+        selectedDates = ["none"];
+
+        card.classList.add("selected");
+
+        return;
+
+    }
+
+
+    /*
+       If they choose a real date,
+       remove None.
+    */
+
+    noneCard.classList.remove("selected");
+
+    selectedDates =
+        selectedDates.filter(
+            item => item !== "none"
+        );
+
+
+    /*
+       Toggle selected date
+    */
+
+    if (card.classList.contains("selected")) {
+
+        card.classList.remove("selected");
+
+        selectedDates =
+            selectedDates.filter(
+                item => item !== date
+            );
+
+    }
+
+    else {
+
+        card.classList.add("selected");
+
+        selectedDates.push(date);
+
+    }
+
+}
+
+
+
+/* =========================================================
+   CONTINUE FROM DATES
+========================================================= */
+
+function continueFromDates() {
+
+    const error =
+        document.getElementById("dateError");
+
+
+    if (selectedDates.length === 0) {
+
+        error.classList.add("show");
+
+        return;
+
+    }
+
+
+    /*
+       NONE → shame
+    */
+
+    if (selectedDates.includes("none")) {
+
+        showLoserPage();
+
+        return;
+
+    }
+
+
+    /*
+       We'll replace this with the
+       time-selection page next.
+    */
+
+    console.log(
+        "Selected dates:",
+        selectedDates
+    );
+
+}
+
+
+
+/* =========================================================
+   BOO LOSER
+========================================================= */
+
+function showLoserPage() {
+
+    const dateScreen =
+        document.getElementById("dateScreen");
+
+    const loserScreen =
+        document.getElementById("loserScreen");
+
+
+    dateScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        loserScreen.classList.remove("hidden");
+
+    }, 300);
+
+}
+
+
+
+function tryDatesAgain() {
+
+    const loserScreen =
+        document.getElementById("loserScreen");
+
+    const dateScreen =
+        document.getElementById("dateScreen");
+
+
+    /*
+       Clear None selection
+    */
+
+    selectedDates = [];
+
+    document
+        .querySelectorAll(".date-card")
+        .forEach(function(card) {
+
+            card.classList.remove("selected");
+
+        });
+
+
+    loserScreen.classList.add("hidden");
+
+
+    setTimeout(function() {
+
+        dateScreen.classList.remove("hidden");
+
+    }, 300);
 
 }
 
